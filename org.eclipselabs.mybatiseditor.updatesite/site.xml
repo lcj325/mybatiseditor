@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipselabs.mybatiseditor.feature_1.0.0.201108061548.jar" id="org.eclipselabs.mybatiseditor.feature" version="1.0.0.201108061548">
+   <description name="MyBatis Editor Update Site" url="https://mybatiseditor.eclipselabs.org.codespot.com/git/org.eclipselabs.mybatiseditor.updatesite/site.xml">
+      Editor support for MyBatis and iBatis in Eclipse.
+   </description>
+   <feature url="features/org.eclipselabs.mybatiseditor.feature_1.0.0.201108061613.jar" id="org.eclipselabs.mybatiseditor.feature" version="1.0.0.201108061613">
       <category name="org.eclipselabs.mybatiseditor.updatesite.category"/>
    </feature>
    <category-def name="org.eclipselabs.mybatiseditor.updatesite.category" label="MyBatis Editor">
