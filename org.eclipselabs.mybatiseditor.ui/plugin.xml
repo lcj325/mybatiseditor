@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+      <hyperlinkDetector
+            activate="true"
+            class="org.eclipselabs.mybatiseditor.ui.hyperlink.MyBatisXmlHyperlinkDetector"
+            id="mybatistest.mybatis.sqlmapper.hyperlinkDetector"
+            name="MyBatis XML Hyperlinks Detector"
+            targetId="org.eclipse.core.runtime.xml">
+      </hyperlinkDetector>
+      <hyperlinkDetector
+            activate="true"
+            class="org.eclipselabs.mybatiseditor.ui.hyperlink.MyBatisJavaMethodHyperlinkDetector"
+            id="org.eclipselabs.mybatiseditor.ui.MyBatisJavaMethodHyperlinkDetector"
+            name="MyBatis Java Method HyperlinkDetector"
+            targetId="org.eclipse.jdt.ui.javaCode">
+      </hyperlinkDetector>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+      		base-type="org.eclipse.core.runtime.xml" 
+            file-extensions="xml"
+            id="org.eclipselabs.mybatiseditor.ui.mybatis3.sqlmapper"             
+            name="MyBatis 3 SQL Mapper configuration file"
+            priority="normal">
+         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
+        <parameter name="element" value="mapper/http://mybatis.org/dtd/mybatis-3-mapper.dtd"/>
+       </describer>
+      </content-type>
+      <content-type
+      		base-type="org.eclipse.core.runtime.xml" 
+            file-extensions="xml"
+            id="org.eclipselabs.mybatiseditor.ui.ibatis2.sqlmapper"             
+            name="iBatis 2 SQL Mapper configuration file"
+            priority="normal">
+         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
+        <parameter name="element" value="sqlMap/http://ibatis.apache.org/dtd/sql-map-2.dtd"/>
+       </describer>
+      </content-type>
+   </extension>
+   
+   <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution>
+         <public
+               id="mybatis-3-mapper.dtd"
+               publicId="-//mybatis.org//DTD Mapper 3.0//EN"
+               uri="dtd/mybatis-3-mapper.dtd"
+               webURL="http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+         </public>
+         <public
+               id="mybatis-3-config.dtd"
+               publicId="-//mybatis.org//DTD Config 3.0//EN"
+               uri="dtd/mybatis-3-config.dtd"
+               webURL="http://mybatis.org/dtd/mybatis-3-config.dtd">
+         </public>
+         <public
+               id="ibatis-2-mapper.dtd"
+               publicId="-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+               uri="dtd/sql-map-2.dtd"
+               webURL="http://ibatis.apache.org/dtd/sql-map-2.dtd">
+         </public>
+         <public
+               id="ibatis-2-config.dtd"
+               publicId="-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+               uri="dtd/sql-map-config-2.dtd"
+               webURL="http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+         </public>
+      </catalogContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.eclipselabs.mybatiseditor.ui.viewcategory"
+            class="org.eclipselabs.mybatiseditor.ui.view.MyBatisSqlView"
+            icon="icons/mybatislogo.png"
+            id="org.eclipselabs.mybatiseditor.ui.mybatissqlview"
+            name="MyBatis Declaration"
+            restorable="true">
+      </view>
+      <category
+            id="org.eclipselabs.mybatiseditor.ui.viewcategory"
+            name="MyBatis">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.ui.queryParticipants">
+      <queryParticipant
+            class="org.eclipselabs.mybatiseditor.ui.search.MyBatisQueryParticipant"
+            id="org.eclipselabs.mybatiseditor.ui.mybatisqueryparticipant"
+            name="MyBatis Query Participant"
+            nature="org.eclipse.jdt.core.javanature">
+      </queryParticipant>
+   </extension>
+</plugin>
