@@ -35,11 +35,8 @@ public class MyBatisStatementHyperlink extends MyBatisHyperlink {
     @Override
     public void open() {
         IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart currentEditor = page.getActiveEditor();
         try {
             IEditorPart editor = findTextEditor(IDE.openEditor(page, file, true));
-            page.getNavigationHistory().markLocation(currentEditor);
-
             if (editor instanceof ITextEditor) {
                 ((ITextEditor) editor).selectAndReveal(node.getStartOffset(),
                         node.getEndOffset() - node.getStartOffset());

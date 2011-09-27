@@ -39,11 +39,9 @@ public class MyBatisXmlHyperlink extends MyBatisHyperlink {
             IRegion include = RegionUtil.getAttributeValueRegion(sourceNode);
             if (include != null) {
                 IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                IEditorPart currentEditor = page.getActiveEditor();
                 IEditorPart editor;
                 try {
                     editor = findTextEditor(IDE.openEditor(page, (IFile) sourceResource, true));
-                    page.getNavigationHistory().markLocation(currentEditor);
                     if ((include != null) && (editor instanceof ITextEditor)) {
                         ((ITextEditor) editor).selectAndReveal(include.getOffset(), include.getLength());
                     }
