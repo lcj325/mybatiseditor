@@ -27,7 +27,9 @@ abstract class MyBatisDomModelTemplate<T> {
 
     /**
      * Implement this method to actually do something when running the template.
-     * @param domModel The validated model.
+     * 
+     * @param domModel
+     *            The validated model.
      * @return The result, or <code>null</code> if no result.
      */
     protected abstract T doWork(IDOMModel domModel);

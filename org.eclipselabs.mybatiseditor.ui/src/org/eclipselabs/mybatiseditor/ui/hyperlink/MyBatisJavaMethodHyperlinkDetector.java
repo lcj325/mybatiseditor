@@ -29,8 +29,7 @@ public class MyBatisJavaMethodHyperlinkDetector extends AbstractHyperlinkDetecto
                 IDOMNode statement = reader.findSqlStatement(file, element.getElementName());
                 if (statement != null) {
                     IRegion wordRegion = JavaWordFinder.findWord(textViewer.getDocument(), region.getOffset());
-                    return new IHyperlink[] { new MyBatisStatementHyperlink(wordRegion, file, element.getElementName(),
-                            statement) };
+                    return new IHyperlink[] { new MyBatisStatementHyperlink(wordRegion, file, element.getElementName(), statement) };
                 }
             }
         } catch (JavaModelException e) {

@@ -38,8 +38,7 @@ public class MyBatisStatementHyperlink extends MyBatisHyperlink {
         try {
             IEditorPart editor = findTextEditor(IDE.openEditor(page, file, true));
             if (editor instanceof ITextEditor) {
-                ((ITextEditor) editor).selectAndReveal(node.getStartOffset(),
-                        node.getEndOffset() - node.getStartOffset());
+                ((ITextEditor) editor).selectAndReveal(node.getStartOffset(), node.getEndOffset() - node.getStartOffset());
             }
         } catch (PartInitException e) {
             MyBatisEditorUiLogger.error("Error while opening link", e);

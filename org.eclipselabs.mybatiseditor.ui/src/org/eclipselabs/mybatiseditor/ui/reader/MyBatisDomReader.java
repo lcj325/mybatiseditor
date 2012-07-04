@@ -68,8 +68,7 @@ public class MyBatisDomReader {
     }
 
     public IDOMNode getCurrentMyBatisNode(IDocument document, final int offset) {
-        return new MyBatisDomModelTemplate<IDOMNode>(StructuredModelManager.getModelManager().getExistingModelForRead(
-                document)) {
+        return new MyBatisDomModelTemplate<IDOMNode>(StructuredModelManager.getModelManager().getExistingModelForRead(document)) {
             @Override
             protected IDOMNode doWork(IDOMModel domModel) {
                 IndexedRegion inode = domModel.getIndexedRegion(offset);
@@ -123,8 +122,8 @@ public class MyBatisDomReader {
         return getResource(new Path(node.getModel().getBaseLocation()));
     }
 
-    private Node findRemoteSource(IFile file, final String sourceElementName, final String sourceId,
-            final boolean returnAttribute) throws IOException, CoreException {
+    private Node findRemoteSource(IFile file, final String sourceElementName, final String sourceId, final boolean returnAttribute)
+            throws IOException, CoreException {
         return new MyBatisDomModelTemplate<Node>(StructuredModelManager.getModelManager().getModelForRead(file)) {
             @Override
             protected Node doWork(IDOMModel domModel) {
@@ -133,8 +132,7 @@ public class MyBatisDomReader {
         }.run();
     }
 
-    private Node findSource(IDOMDocument document, String sourceElementName, String id, boolean localSearch,
-            boolean returnAttribute) {
+    private Node findSource(IDOMDocument document, String sourceElementName, String id, boolean localSearch, boolean returnAttribute) {
         boolean neverSearchNamespace;
         boolean searchOnlyWithNamespace;
         String namespace;
@@ -257,8 +255,8 @@ public class MyBatisDomReader {
         return false;
     }
 
-    private Node searchContainer(IContainer container, IResource skipResource, String sourceElementName,
-            String sourceId, boolean returnAttribute) throws CoreException, IOException {
+    private Node searchContainer(IContainer container, IResource skipResource, String sourceElementName, String sourceId,
+            boolean returnAttribute) throws CoreException, IOException {
         Node result = null;
         IResource[] members = container.members(IContainer.EXCLUDE_DERIVED);
         for (IResource resource : members) {
@@ -266,9 +264,7 @@ public class MyBatisDomReader {
                 continue;
             }
             if (resource instanceof IContainer) {
-                result =
-                        searchContainer((IContainer) resource, skipResource, sourceElementName, sourceId,
-                                returnAttribute);
+                result = searchContainer((IContainer) resource, skipResource, sourceElementName, sourceId, returnAttribute);
             } else if (resource instanceof IFile) {
                 IFile file = (IFile) resource;
                 result = searchFile(file, sourceElementName, sourceId, returnAttribute);
@@ -280,14 +276,13 @@ public class MyBatisDomReader {
         return result;
     }
 
-    private Node searchFile(IFile file, String sourceElementName, String sourceId, boolean returnAttribute)
-            throws CoreException, IOException {
+    private Node searchFile(IFile file, String sourceElementName, String sourceId, boolean returnAttribute) throws CoreException,
+            IOException {
         if (file.getFileExtension().equals("xml")) {
             IContentDescription contentDescription = file.getContentDescription();
             if (contentDescription != null) {
                 IContentType type = contentDescription.getContentType();
-                if ((type != null)
-                        && (type.getId().equals(IBATIS2_CONTENTTYPE_ID) || type.getId().equals(MYBATIS3_CONTENTTYPE_ID))) {
+                if ((type != null) && (type.getId().equals(IBATIS2_CONTENTTYPE_ID) || type.getId().equals(MYBATIS3_CONTENTTYPE_ID))) {
                     return findRemoteSource(file, sourceElementName, sourceId, returnAttribute);
                 }
             }
@@ -295,8 +290,7 @@ public class MyBatisDomReader {
         return null;
     }
 
-    IDOMNode findDeclaringNode(IDOMDocument startingDocument, String sourceElementName, String sourceId,
-            boolean returnAttribute) {
+    IDOMNode findDeclaringNode(IDOMDocument startingDocument, String sourceElementName, String sourceId, boolean returnAttribute) {
         Node sourceNode = findSource(startingDocument, sourceElementName, sourceId, true, returnAttribute);
         try {
             if (sourceNode == null) {

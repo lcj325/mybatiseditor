@@ -23,12 +23,12 @@ import org.w3c.dom.Element;
 
 @SuppressWarnings("restriction")
 public class MyBatisSqlView extends ViewPart {
-	
-	private static final String BACKGROUND_PREF_ID = "org.eclipselabs.mybatiseditor.ui.mybatissqlviewBackground";
-	
-	private static final String TEXTCOLOR_PREF_ID = "org.eclipselabs.mybatiseditor.ui.mybatissqlviewTextColor";
-	
-	private static final String FONT_PREF_ID = "org.eclipselabs.mybatiseditor.ui.mybatissqlviewFont";
+
+    private static final String BACKGROUND_PREF_ID = "org.eclipselabs.mybatiseditor.ui.mybatissqlviewBackground";
+
+    private static final String TEXTCOLOR_PREF_ID = "org.eclipselabs.mybatiseditor.ui.mybatissqlviewTextColor";
+
+    private static final String FONT_PREF_ID = "org.eclipselabs.mybatiseditor.ui.mybatissqlviewFont";
 
     private final class MyBatisSqlViewSelectionListener implements ISelectionListener {
 
@@ -37,27 +37,28 @@ public class MyBatisSqlView extends ViewPart {
             if (!selection.isEmpty() && (selection instanceof IStructuredSelection)) {
                 IStructuredSelection sel = (IStructuredSelection) selection;
                 if (sel.size() == 1) {
-                    Object firstElement = sel.getFirstElement();
-                    MyBatisDomReader reader = new MyBatisDomReader();
-                    if ((firstElement instanceof ElementImpl) && (selection instanceof ITextSelection)) {
-                        ElementImpl selectedElement = (ElementImpl) firstElement;
-                        ITextSelection textSel = (ITextSelection) selection;
-                        firstElement =
-                                reader.getCurrentMyBatisNode(selectedElement.getStructuredDocument(),
-                                        textSel.getOffset());
-                    }
-                    if (firstElement instanceof AttrImpl) {
-                        AttrImpl attr = (AttrImpl) firstElement;
-                        Element ownerElement = attr.getOwnerElement();
-                        if (ownerElement instanceof ElementImpl) {
-                            ElementImpl element = (ElementImpl) ownerElement;
-                            String newText =
-                                    new MyBatisSqlParser().getSqlText(element.getStructuredDocument(), element.getLocalName(),
-                                            attr.getNodeValue());
-                            if ((newText != null) && !newText.equals(text.getText())) {
-                                text.setText(newText);
-                            }
-                        }
+                    handleSingleSelection(sel);
+                }
+            }
+        }
+
+        private void handleSingleSelection(IStructuredSelection sel) {
+            Object firstElement = sel.getFirstElement();
+            if ((firstElement instanceof ElementImpl) && (sel instanceof ITextSelection)) {
+                ElementImpl selectedElement = (ElementImpl) firstElement;
+                ITextSelection textSel = (ITextSelection) sel;
+                firstElement = new MyBatisDomReader().getCurrentMyBatisNode(selectedElement.getStructuredDocument(),
+                        textSel.getOffset());
+            }
+            if (firstElement instanceof AttrImpl) {
+                AttrImpl attr = (AttrImpl) firstElement;
+                Element ownerElement = attr.getOwnerElement();
+                if (ownerElement instanceof ElementImpl) {
+                    ElementImpl element = (ElementImpl) ownerElement;
+                    String newText = new MyBatisSqlParser().getSqlText(element.getStructuredDocument(), element.getLocalName(),
+                            attr.getNodeValue());
+                    if ((newText != null) && !newText.equals(text.getText())) {
+                        text.setText(newText);
                     }
                 }
             }
@@ -68,20 +69,19 @@ public class MyBatisSqlView extends ViewPart {
 
         @Override
         public void propertyChange(PropertyChangeEvent event) {
-            if (FONT_PREF_ID.equals(event.getProperty()) 
-            		|| BACKGROUND_PREF_ID.equals(event.getProperty())
-            		|| TEXTCOLOR_PREF_ID.equals(event.getProperty())) {
-            	final Display display= getSite().getPage().getWorkbenchWindow().getWorkbench().getDisplay();
-				if (!display.isDisposed()) {
-					display.asyncExec(new Runnable() {
-						public void run() {
-							if (!display.isDisposed()) {
-								setAppearance();
-							}
-						}
-					});
-				}
-            }            
+            if (FONT_PREF_ID.equals(event.getProperty()) || BACKGROUND_PREF_ID.equals(event.getProperty())
+                    || TEXTCOLOR_PREF_ID.equals(event.getProperty())) {
+                final Display display = getSite().getPage().getWorkbenchWindow().getWorkbench().getDisplay();
+                if (!display.isDisposed()) {
+                    display.asyncExec(new Runnable() {
+                        public void run() {
+                            if (!display.isDisposed()) {
+                                setAppearance();
+                            }
+                        }
+                    });
+                }
+            }
         }
     }
 
@@ -106,10 +106,12 @@ public class MyBatisSqlView extends ViewPart {
     }
 
     protected void setAppearance() {
-    	ITheme currentTheme = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme();
-    	text.setFont(currentTheme.getFontRegistry().get(FONT_PREF_ID));
-    	text.setBackground(currentTheme.getColorRegistry().get(BACKGROUND_PREF_ID));
-    	text.setForeground(currentTheme.getColorRegistry().get(TEXTCOLOR_PREF_ID));
+        ITheme currentTheme = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme();
+        if (!text.isDisposed()) {
+            text.setFont(currentTheme.getFontRegistry().get(FONT_PREF_ID));
+            text.setBackground(currentTheme.getColorRegistry().get(BACKGROUND_PREF_ID));
+            text.setForeground(currentTheme.getColorRegistry().get(TEXTCOLOR_PREF_ID));
+        }
     }
 
     @Override

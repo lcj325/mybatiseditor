@@ -15,8 +15,7 @@ public class MyBatisSqlParser {
     private final MyBatisDomReader reader = new MyBatisDomReader();
 
     public String getSqlText(IStructuredDocument mapperDocument, final String elementName, final String attributeValue) {
-        return new MyBatisDomModelTemplate<String>(StructuredModelManager.getModelManager().getModelForRead(
-                mapperDocument)) {
+        return new MyBatisDomModelTemplate<String>(StructuredModelManager.getModelManager().getModelForRead(mapperDocument)) {
             @Override
             protected String doWork(IDOMModel domModel) {
                 return parseSqlNode(domModel.getDocument(), elementName, attributeValue);

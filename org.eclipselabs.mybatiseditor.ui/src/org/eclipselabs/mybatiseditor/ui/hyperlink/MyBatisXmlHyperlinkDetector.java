@@ -43,8 +43,7 @@ public class MyBatisXmlHyperlinkDetector extends AbstractHyperlinkDetector {
     }
 
     private boolean isLinkableAttribute(String name) {
-        return "refid".equals(name) || "resultMap".equals(name) || "parameterMap".equals(name)
-                || "extends".equals(name);
+        return "refid".equals(name) || "resultMap".equals(name) || "parameterMap".equals(name) || "extends".equals(name);
     }
 
     protected IRegion getHyperlinkRegion(IDOMNode node) {
