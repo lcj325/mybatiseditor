@@ -3,17 +3,19 @@ Bundle-ManifestVersion: 2
 Bundle-Name: MyBatis Editor UI
 Bundle-SymbolicName: org.eclipselabs.mybatiseditor.ui;singleton:=true
 Bundle-Version: 1.0.3.qualifier
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.jface.text,
- org.eclipse.wst.sse.core,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.wst.xml.core,
+ org.eclipse.jdt.core,
+ org.eclipse.search,
+ org.eclipse.jface.text,
+ org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.ui.ide,
- org.eclipse.jdt.core,
  org.eclipse.jdt.ui,
- org.eclipse.search
+ org.eclipse.wst.sse.core,
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.sse.ui,
+ org.eclipse.wst.xml.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: org.eclipselabs.mybatiseditor.ui.MyBatisEditorUiActivator

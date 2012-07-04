@@ -48,6 +48,25 @@ public class MyBatisDomReader {
         return findDeclaringNode(node.getModel().getDocument(), elementName, node.getValue(), true);
     }
 
+    public List<String> findDeclarations(IDOMDocument document, String sourceElementName) {
+        List<String> result = new ArrayList<String>();
+        NodeList nodeList = document.getElementsByTagName(sourceElementName);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node item = nodeList.item(i);
+            NamedNodeMap attributes = item.getAttributes();
+            if (attributes != null) {
+                Node idNode = attributes.getNamedItem("id");
+                if (idNode != null) {
+                    String idValue = idNode.getNodeValue();
+                    if ((idValue != null) && !idValue.trim().isEmpty()) {
+                        result.add(idValue);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     public IDOMNode findSqlStatement(IFile file, final String statementName) {
         IStructuredModel sModel;
         try {

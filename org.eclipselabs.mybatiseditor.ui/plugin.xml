@@ -19,6 +19,14 @@
       </hyperlinkDetector>
    </extension>
    
+   <extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+      <!-- Explicitly declare configuration as XML for MyBatis, some other plug-ins like to override 
+      base XML config and mess things up with content assist and other default behavior -->
+      <sourceViewerConfiguration
+			class="org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML"
+			target="org.eclipselabs.mybatiseditor.ui.mybatis3.sqlmapper,org.eclipselabs.mybatiseditor.ui.ibatis2.sqlmapper" />   	  
+   </extension>
+   
    <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
@@ -136,5 +144,25 @@
             Text color for the MyBatis Declaration view.
          </description>
       </colorDefinition>
+   </extension>
+   <extension
+         point="org.eclipse.wst.sse.ui.completionProposal">
+      <proposalCategory
+            icon="icons/mybatislogo.png"
+            id="org.eclipselabs.mybatiseditor.ui.proposalCategory"
+            name="MyBatis Proposals">
+      </proposalCategory>
+      <proposalComputer
+            activate="true"
+            categoryId="org.eclipselabs.mybatiseditor.ui.proposalCategory"
+            class="org.eclipselabs.mybatiseditor.ui.assist.MyBatisXmlCompletionProposalComputer"
+            id="org.eclipselabs.mybatiseditor.ui.myBatisXmlCompletionProposalComputer">
+         <contentType
+               id="org.eclipselabs.mybatiseditor.ui.ibatis2.sqlmapper">
+         </contentType>
+         <contentType
+               id="org.eclipselabs.mybatiseditor.ui.mybatis3.sqlmapper">
+         </contentType>
+      </proposalComputer>
    </extension>
 </plugin>
