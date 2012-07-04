@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
@@ -23,7 +22,7 @@ import org.w3c.dom.Node;
 public class MyBatisXmlCompletionProposalComputer implements ICompletionProposalComputer {
 
     private enum ProposalType {
-        RESULTMAP
+        RESULTMAP, INCLUDE, PARAMMAP
     }
 
     private static final class ProposalTarget {
@@ -49,22 +48,29 @@ public class MyBatisXmlCompletionProposalComputer implements ICompletionProposal
 
     @Override
     public List<CompletionProposal> computeCompletionProposals(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
-        ITextViewer textViewer = context.getViewer();
         int offset = context.getInvocationOffset();
 
         MyBatisDomReader reader = new MyBatisDomReader();
-        IDOMNode node = reader.getCurrentMyBatisNode(textViewer.getDocument(), offset);
+        IDOMNode node = reader.getCurrentMyBatisNode(context.getDocument(), offset);
 
-        ProposalTarget proposalTarget = determineProposalType(node, offset);
+        ProposalTarget proposalTarget = determineProposalTarget(node, offset);
         if (proposalTarget != null) {
             List<String> proposals;
+            String searchElement;
             switch (proposalTarget.getType()) {
             case RESULTMAP:
-                proposals = reader.findDeclarations(node.getModel().getDocument(), "resultMap");
+                searchElement = "resultMap";
+                break;
+            case INCLUDE:
+                searchElement = "sql";
+                break;
+            case PARAMMAP:
+                searchElement = "parameterMap";
                 break;
             default:
-                throw new IllegalStateException();
+                throw new IllegalStateException("Undefined enum value");
             }
+            proposals = reader.findDeclarations(node.getModel().getDocument(), searchElement);
             return createProposals(proposals, proposalTarget.getRegion());
         }
         return Collections.emptyList();
@@ -84,7 +90,7 @@ public class MyBatisXmlCompletionProposalComputer implements ICompletionProposal
         return result;
     }
 
-    private ProposalTarget determineProposalType(IDOMNode node, int offset) {
+    private ProposalTarget determineProposalTarget(IDOMNode node, int offset) {
         if (node == null) {
             return null;
         }
@@ -93,15 +99,28 @@ public class MyBatisXmlCompletionProposalComputer implements ICompletionProposal
         short nodeType = node.getNodeType();
         if (nodeType == Node.ATTRIBUTE_NODE) {
             IDOMAttr attr = (IDOMAttr) node;
-            String name = attr.getName();
-            if ("resultMap".equals(name)) {
+            ProposalType type = determineProposalType(attr.getName());
+            if (type != null) {
                 IRegion valueRegion = RegionUtil.getAttributeValueRegion(node);
                 if (offsetInRegion(offset, valueRegion)) {
-                    result = new ProposalTarget(ProposalType.RESULTMAP, valueRegion);
+                    result = new ProposalTarget(type, valueRegion);
                 }
             }
         }
         return result;
+    }
+
+    private ProposalType determineProposalType(String attrName) {
+        if ("resultMap".equals(attrName)) {
+            return ProposalType.RESULTMAP;
+        }
+        if ("refid".equals(attrName)) {
+            return ProposalType.INCLUDE;
+        }
+        if ("parameterMap".equals(attrName)) {
+            return ProposalType.PARAMMAP;
+        }
+        return null;
     }
 
     private boolean offsetInRegion(int offset, IRegion region) {
