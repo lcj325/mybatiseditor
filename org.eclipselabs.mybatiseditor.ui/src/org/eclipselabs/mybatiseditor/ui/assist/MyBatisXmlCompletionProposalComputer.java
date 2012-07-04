@@ -48,12 +48,6 @@ public class MyBatisXmlCompletionProposalComputer implements ICompletionProposal
     }
 
     @Override
-    public void sessionStarted() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public List<CompletionProposal> computeCompletionProposals(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
         ITextViewer textViewer = context.getViewer();
         int offset = context.getInvocationOffset();
@@ -126,18 +120,21 @@ public class MyBatisXmlCompletionProposalComputer implements ICompletionProposal
 
     @Override
     public List<IContextInformation> computeContextInformation(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public String getErrorMessage() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
+    public void sessionStarted() {
+        // Do nothing
+    }
+
+    @Override
     public void sessionEnded() {
-        // TODO Auto-generated method stub
+        // Do nothing
     }
 }

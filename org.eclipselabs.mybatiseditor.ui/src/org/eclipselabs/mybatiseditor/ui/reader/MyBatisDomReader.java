@@ -6,18 +6,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -35,8 +30,6 @@ import org.w3c.dom.NodeList;
 public class MyBatisDomReader {
 
     private static final String IBATIS2_CONTENTTYPE_ID = "org.eclipselabs.mybatiseditor.ui.ibatis2.sqlmapper";
-
-    private static final String JAVANATURE_ID = "org.eclipse.jdt.core.javanature";
 
     private static final String MYBATIS3_CONTENTTYPE_ID = "org.eclipselabs.mybatiseditor.ui.mybatis3.sqlmapper";
 
@@ -122,7 +115,7 @@ public class MyBatisDomReader {
         String mapperName = type.getElementName();
         IContainer[] sourceFolders;
         try {
-            sourceFolders = getSourceFolders(type.getJavaProject().getProject());
+            sourceFolders = MyBatisJavaUtil.getSourceFolders(type.getJavaProject().getProject());
         } catch (CoreException e) {
             MyBatisEditorUiLogger.error("Error while looking for " + packageName + "." + mapperName, e);
             return null;
@@ -137,8 +130,8 @@ public class MyBatisDomReader {
         return null;
     }
 
-    public IResource getResource(IDOMNode node) {
-        return getResource(new Path(node.getModel().getBaseLocation()));
+    public IFile getResource(IDOMNode node) {
+        return (IFile) MyBatisJavaUtil.getResource(new Path(node.getModel().getBaseLocation()));
     }
 
     private Node findRemoteSource(IFile file, final String sourceElementName, final String sourceId, final boolean returnAttribute)
@@ -230,25 +223,6 @@ public class MyBatisDomReader {
         return elementName;
     }
 
-    private IResource getResource(IPath path) {
-        return ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-    }
-
-    private IContainer[] getSourceFolders(IProject project) throws CoreException {
-        if (project.hasNature(JAVANATURE_ID)) {
-            IClasspathEntry[] rawClasspath = JavaCore.create(project).getRawClasspath();
-            List<IContainer> result = new ArrayList<IContainer>();
-            for (IClasspathEntry entry : rawClasspath) {
-                if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-                    result.add((IContainer) getResource(entry.getPath()));
-                }
-            }
-            return (IContainer[]) result.toArray(new IContainer[result.size()]);
-        } else {
-            return new IContainer[] { project };
-        }
-    }
-
     private boolean isMatch(String id, String idValue, String namespace, boolean neverSearchNamespace,
             boolean searchOnlyWithNamespace) {
         // only search with namespace (non-local search on namespace
@@ -314,7 +288,7 @@ public class MyBatisDomReader {
         try {
             if (sourceNode == null) {
                 IResource resource = getResource(startingDocument);
-                IContainer[] sourceFolders = getSourceFolders(resource.getProject());
+                IContainer[] sourceFolders = MyBatisJavaUtil.getSourceFolders(resource.getProject());
                 for (IContainer folder : sourceFolders) {
                     sourceNode = searchContainer(folder, resource, sourceElementName, sourceId, returnAttribute);
                     if (sourceNode != null) {
