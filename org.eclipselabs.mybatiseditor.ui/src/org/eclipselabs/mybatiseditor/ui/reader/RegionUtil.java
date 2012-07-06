@@ -22,6 +22,7 @@ public final class RegionUtil {
 
         int regOffset = att.getValueRegionStartOffset();
 
+        // there is no alternative method for the deprecated one...
         @SuppressWarnings("deprecation")
         ITextRegion valueRegion = att.getValueRegion();
         if (valueRegion != null) {

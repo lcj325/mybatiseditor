@@ -46,14 +46,11 @@ public class MyBatisSqlParser {
                 parseSqlTextNode(sqlResult, childNode);
             } else if (nodeType == Node.ELEMENT_NODE) {
                 if (childNode.getLocalName().equals("include")) {
-                    NamedNodeMap attributes = childNode.getAttributes();
-                    if (attributes != null) {
-                        Node idNode = attributes.getNamedItem("refid");
-                        if (idNode != null) {
-                            IDOMNode result = reader.findDeclaringNode(document, "sql", idNode.getNodeValue(), false);
-                            if ((result != null) && !result.equals(sqlNode)) {
-                                sqlResult.append(parseSqlNode(result.getModel().getDocument(), result));
-                            }
+                    String refIdValue = XmlUtil.getAttributeValue(childNode, "refid");
+                    if (refIdValue != null) {
+                        IDOMNode result = reader.findDeclaringNode(document, "sql", refIdValue, false);
+                        if ((result != null) && !result.equals(sqlNode)) {
+                            sqlResult.append(parseSqlNode(result.getModel().getDocument(), result));
                         }
                     }
                 } else {

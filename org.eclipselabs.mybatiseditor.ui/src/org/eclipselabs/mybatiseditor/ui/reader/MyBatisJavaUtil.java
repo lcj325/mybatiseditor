@@ -1,6 +1,7 @@
 package org.eclipselabs.mybatiseditor.ui.reader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -14,6 +15,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
 public class MyBatisJavaUtil {
 
@@ -39,6 +41,13 @@ public class MyBatisJavaUtil {
             return null;
         }
         return JavaCore.create(project).findType(className);
+    }
+
+    public static List<ICompletionProposal> proposeJavaTypes(IProject project, int offset) throws CoreException {
+        if (!project.hasNature(JAVANATURE_ID)) {
+            return Collections.emptyList();
+        }
+        return Collections.emptyList();
     }
 
     public static IJavaElement findJavaElement(IProject project, String className, String elementName) throws CoreException {
