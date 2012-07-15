@@ -5,14 +5,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipselabs.mybatiseditor.ui.MyBatisEditorUiLogger;
 import org.eclipselabs.mybatiseditor.ui.reader.MyBatisDomReader;
 import org.eclipselabs.mybatiseditor.ui.reader.MyBatisJavaUtil;
@@ -60,15 +58,14 @@ public class MyBatisXmlHyperlink extends MyBatisHyperlink {
 
     private void openXmlReference() {
         MyBatisDomReader reader = new MyBatisDomReader();
-        IDOMNode sourceNode = reader.findRelatedAttributeNode(linkNode);
+        IDOMAttr sourceNode = reader.findRelatedAttributeNode(linkNode);
         if (sourceNode != null) {
             IRegion include = RegionUtil.getAttributeValueRegion(sourceNode);
             if (include != null) {
                 IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                IEditorPart editor;
                 try {
-                    editor = findTextEditor(IDE.openEditor(page, reader.getResource(sourceNode), true));
-                    if ((include != null) && (editor instanceof ITextEditor)) {
+                    ITextEditor editor = findTextEditor(IDE.openEditor(page, reader.getResource(sourceNode), true));
+                    if (editor != null) {
                         ((ITextEditor) editor).selectAndReveal(include.getOffset(), include.getLength());
                     }
                 } catch (PartInitException e) {

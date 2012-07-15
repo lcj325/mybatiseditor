@@ -188,7 +188,7 @@ public class MyBatisXmlCompletionProposalComputer implements ICompletionProposal
             IDOMAttr attr = (IDOMAttr) node;
             ProposalType type = determineProposalType(attr.getName());
             if (type != null) {
-                IRegion valueRegion = RegionUtil.getAttributeValueRegion(node);
+                IRegion valueRegion = RegionUtil.getAttributeValueRegion(attr);
                 if (offsetInRegion(offset, valueRegion)) {
                     result = new ProposalTarget(type, valueRegion);
                 }

@@ -2,7 +2,6 @@ package org.eclipselabs.mybatiseditor.ui.hyperlink;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -36,9 +35,9 @@ public class MyBatisStatementHyperlink extends MyBatisHyperlink {
     public void open() {
         IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         try {
-            IEditorPart editor = findTextEditor(IDE.openEditor(page, file, true));
-            if (editor instanceof ITextEditor) {
-                ((ITextEditor) editor).selectAndReveal(node.getStartOffset(), node.getEndOffset() - node.getStartOffset());
+            ITextEditor editor = findTextEditor(IDE.openEditor(page, file, true));
+            if (editor != null) {
+                editor.selectAndReveal(node.getStartOffset(), node.getEndOffset() - node.getStartOffset());
             }
         } catch (PartInitException e) {
             MyBatisEditorUiLogger.error("Error while opening link", e);

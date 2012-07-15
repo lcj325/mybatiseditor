@@ -33,12 +33,12 @@ public class MyBatisDomReader {
 
     private static final String MYBATIS3_CONTENTTYPE_ID = "org.eclipselabs.mybatiseditor.ui.mybatis3.sqlmapper";
 
-    public IDOMNode findRelatedAttributeNode(IDOMAttr node) {
+    public IDOMAttr findRelatedAttributeNode(IDOMAttr node) {
         String elementName = getElementName(node.getName());
         if (elementName == null) {
             return null;
         }
-        return findDeclaringNode(node.getModel().getDocument(), elementName, node.getValue(), true);
+        return (IDOMAttr) findDeclaringNode(node.getModel().getDocument(), elementName, node.getValue(), true);
     }
 
     public List<String> findDeclarations(IDOMDocument document, String sourceElementName) {
@@ -277,7 +277,8 @@ public class MyBatisDomReader {
         return null;
     }
 
-    IDOMNode findDeclaringNode(IDOMDocument startingDocument, String sourceElementName, String sourceId, boolean returnAttribute) {
+    public IDOMNode findDeclaringNode(IDOMDocument startingDocument, String sourceElementName, String sourceId,
+            boolean returnAttribute) {
         Node sourceNode = findSource(startingDocument, sourceElementName, sourceId, true, returnAttribute);
         try {
             if (sourceNode == null) {

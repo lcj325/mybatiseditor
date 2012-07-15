@@ -34,8 +34,9 @@ public class MyBatisJavaMethodHyperlinkDetector extends AbstractHyperlinkDetecto
             }
         } catch (JavaModelException e) {
             MyBatisEditorUiLogger.error("Error while inspecting Java model", e);
-            return null;
         }
+        // Note that Eclipse API requires either a non-empty array or null,
+        // zero-length array is not allowed...
         return null;
     }
 

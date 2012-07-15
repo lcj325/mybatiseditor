@@ -20,6 +20,8 @@ public class MyBatisXmlHyperlinkDetector extends AbstractHyperlinkDetector {
 
     public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
         if (region == null || textViewer == null) {
+            // Note that Eclipse API requires either a non-empty array or null,
+            // zero-length array is not allowed...
             return null;
         }
         IDOMNode node = new MyBatisDomReader().getCurrentMyBatisNode(textViewer.getDocument(), region.getOffset());
@@ -59,11 +61,13 @@ public class MyBatisXmlHyperlinkDetector extends AbstractHyperlinkDetector {
 
     private boolean isLinkableJavaQuery(IDOMAttr attr) {
         Element parentNode = attr.getOwnerElement();
+        if (parentNode == null) {
+            return false;
+        }
         String parentName = parentNode.getNodeName();
 
-        if ((parentNode != null)
-                && ("select".equals(parentName) || "insert".equals(parentName) || "update".equals(parentName) || "delete"
-                        .equals(parentName))) {
+        if (("select".equals(parentName) || "insert".equals(parentName) || "update".equals(parentName) || "delete"
+                .equals(parentName))) {
 
             Element documentElement = parentNode.getOwnerDocument().getDocumentElement();
             if (documentElement != null) {
@@ -84,11 +88,8 @@ public class MyBatisXmlHyperlinkDetector extends AbstractHyperlinkDetector {
     }
 
     protected IRegion getHyperlinkRegion(IDOMNode node) {
-        if (node == null) {
-            return null;
-        }
-        if (Node.ATTRIBUTE_NODE == node.getNodeType()) {
-            return RegionUtil.getAttributeValueRegion(node);
+        if (node instanceof IDOMAttr) {
+            return RegionUtil.getAttributeValueRegion((IDOMAttr) node);
         }
         return null;
     }
