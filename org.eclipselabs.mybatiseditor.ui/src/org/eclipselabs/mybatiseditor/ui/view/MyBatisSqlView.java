@@ -4,16 +4,20 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.themes.ITheme;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
@@ -93,9 +97,6 @@ public class MyBatisSqlView extends ViewPart {
 
     @Override
     public void createPartControl(Composite parent) {
-        selectionListener = new MyBatisSqlViewSelectionListener();
-        getSite().getWorkbenchWindow().getSelectionService().addPostSelectionListener(selectionListener);
-
         Composite composite = new Composite(parent, SWT.NULL);
         composite.setLayout(new FillLayout());
         text = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -103,6 +104,26 @@ public class MyBatisSqlView extends ViewPart {
 
         themeListener = new MyBatisSqlViewPropertyChangeListener();
         PlatformUI.getWorkbench().getThemeManager().addPropertyChangeListener(themeListener);
+
+        selectionListener = new MyBatisSqlViewSelectionListener();
+        IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
+        workbenchWindow.getSelectionService().addPostSelectionListener(selectionListener);
+        setActiveEditorSelection(workbenchWindow);
+    }
+
+    private void setActiveEditorSelection(IWorkbenchWindow workbenchWindow) {
+        // Use the active editor, instead of the global selection.
+        // The global selection might be altered by another view.
+        IEditorPart activeEditor = workbenchWindow.getActivePage().getActiveEditor();
+        if (activeEditor != null) {
+            ITextEditor editor = (ITextEditor) activeEditor.getAdapter(ITextEditor.class);
+            if (editor != null) {
+                ISelectionProvider provider = editor.getSelectionProvider();
+                if (provider != null) {
+                    selectionListener.selectionChanged(editor, provider.getSelection());
+                }
+            }
+        }
     }
 
     protected void setAppearance() {
