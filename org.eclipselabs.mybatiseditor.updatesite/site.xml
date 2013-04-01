@@ -9,6 +9,9 @@
    <feature url="features/org.eclipselabs.mybatiseditor.feature_1.1.0.201207062137.jar" id="org.eclipselabs.mybatiseditor.feature" version="1.1.0.201207062137">
       <category name="org.eclipselabs.mybatiseditor.updatesite.category"/>
    </feature>
+   <feature url="features/org.eclipselabs.mybatiseditor.feature_1.1.1.201304011322.jar" id="org.eclipselabs.mybatiseditor.feature" version="1.1.1.201304011322">
+      <category name="org.eclipselabs.mybatiseditor.updatesite.category"/>
+   </feature>
    <category-def name="org.eclipselabs.mybatiseditor.updatesite.category" label="MyBatis Editor">
       <description>
          Editor support for MyBatis and iBatis in Eclipse.
