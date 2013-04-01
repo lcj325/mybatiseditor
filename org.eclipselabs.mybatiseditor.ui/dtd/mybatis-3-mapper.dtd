@@ -59,6 +59,7 @@ typeHandler CDATA #IMPLIED
 id CDATA #REQUIRED
 type CDATA #REQUIRED
 extends CDATA #IMPLIED
+autoMapping (true|false) #IMPLIED
 >
 
 <!ELEMENT constructor (idArg*,arg*)>
@@ -139,7 +140,7 @@ typeHandler CDATA #IMPLIED
 <!ELEMENT case (constructor?,id*,result*,association*,collection*, discriminator?)>
 <!ATTLIST case
 value CDATA #REQUIRED
-resultMap CDATA #IMPLIED 
+resultMap CDATA #IMPLIED
 resultType CDATA #IMPLIED
 >
 
@@ -155,7 +156,7 @@ alias CDATA #REQUIRED
 type CDATA #REQUIRED
 >
 
-<!ELEMENT select (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT select (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST select
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -169,9 +170,11 @@ timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 useCache (true|false) #IMPLIED
 databaseId CDATA #IMPLIED
+lang CDATA #IMPLIED
+resultOrdered (true|false) #IMPLIED
 >
 
-<!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT insert (#PCDATA | selectKey | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST insert
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -183,9 +186,10 @@ keyProperty CDATA #IMPLIED
 useGeneratedKeys (true|false) #IMPLIED
 keyColumn CDATA #IMPLIED
 databaseId CDATA #IMPLIED
+lang CDATA #IMPLIED
 >
 
-<!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT selectKey (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST selectKey
 resultType CDATA #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
@@ -194,7 +198,7 @@ order (BEFORE|AFTER) #IMPLIED
 databaseId CDATA #IMPLIED
 >
 
-<!ELEMENT update (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT update (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST update
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -203,9 +207,10 @@ timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 databaseId CDATA #IMPLIED
+lang CDATA #IMPLIED
 >
 
-<!ELEMENT delete (#PCDATA | include | trim | where | set | foreach | choose | if)*>
+<!ELEMENT delete (#PCDATA | include | trim | where | set | foreach | choose | if | bind)*>
 <!ATTLIST delete
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -214,6 +219,7 @@ timeout CDATA #IMPLIED
 flushCache (true|false) #IMPLIED
 statementType (STATEMENT|PREPARED|CALLABLE) #IMPLIED
 databaseId CDATA #IMPLIED
+lang CDATA #IMPLIED
 >
 
 <!-- Dynamic -->
@@ -223,9 +229,17 @@ databaseId CDATA #IMPLIED
 refid CDATA #REQUIRED
 >
 
+<!ELEMENT bind EMPTY>
+<!ATTLIST bind
+ name CDATA #REQUIRED
+ value CDATA #REQUIRED
+>
+
 <!ELEMENT sql (#PCDATA | include | trim | where | set | foreach | choose | if)*>
 <!ATTLIST sql
 id CDATA #REQUIRED
+lang CDATA #IMPLIED
+databaseId CDATA #IMPLIED
 >
 
 <!ELEMENT trim (#PCDATA | include | trim | where | set | foreach | choose | if)*>
@@ -259,4 +273,5 @@ test CDATA #REQUIRED
 <!ATTLIST if
 test CDATA #REQUIRED
 >
+
 
